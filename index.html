@@ -1,413 +1,255 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>JISAN DIGITAL SEBA</title>
-<style>
-*{box-sizing:border-box}
-body{margin:0;background:#f0f7f2;color:#203b2b;font-family:Arial,"Noto Sans Bengali",sans-serif;line-height:1.6}
-header{background:#087443;color:white;text-align:center;padding:22px 12px}
-main{max-width:1050px;margin:auto;padding:15px}
-h2{color:#087443}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.card,.panel{background:white;border-radius:12px;padding:15px;border:1px solid #dce9df;margin-bottom:12px}
-button{background:#087443;color:white;border:0;border-radius:7px;padding:11px 15px;margin:4px;cursor:pointer;font-size:15px}
-button.secondary{background:#52665a}
-button.danger{background:#a52b2b}
-input,select,textarea{width:100%;padding:11px;margin:5px 0 13px;border:1px solid #b8c9bd;border-radius:7px;font-size:16px;background:white}
-label{font-weight:bold;display:block}
-.hidden{display:none!important}
-.small{font-size:13px;color:#596b60}
-.actions{display:flex;flex-wrap:wrap;gap:5px}
-#fields{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
-.full{grid-column:1/-1}
-.record{border-bottom:1px solid #ddd;padding:10px 0}
-@media(max-width:650px){.grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:360px){.grid{grid-template-columns:1fr}}
-@media print{
- header,.grid,.no-print,#recordsPanel{display:none!important}
- body{background:white;color:black}
- main{max-width:100%;padding:0}
- .panel{border:0}
- input,select,textarea{border:0;border-bottom:1px solid #777;border-radius:0}
- #formArea{display:block!important}
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>অনলাইন জন্ম নিবন্ধন আবেদন ও যাচাই সেবা</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Hind Siliguri', sans-serif; }
+        .watermark {
+            background-image: radial-gradient(circle, rgba(16, 185, 129, 0.08) 0%, transparent 70%);
+        }
+    </style>
 </head>
-<body>
-<header>
-<h1>🌿 JISAN DIGITAL SEBA</h1>
-<p>নাগরিক সেবা — এক জায়গায়, সহজ বাংলায়</p>
-</header>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col">
 
-<main>
-<div class="panel">
-<h2>২১টি নাগরিক সেবা</h2>
-<input id="search" placeholder="সেবার নাম লিখে খুঁজুন..." oninput="searchServices()">
-<div class="grid" id="services"></div>
-</div>
+    <!-- Header -->
+    <header class="bg-emerald-800 text-white shadow-md border-b-4 border-red-600">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-full bg-red-600 flex items-center justify-center font-bold text-2xl shadow">
+                    🇧🇩
+                </div>
+                <div>
+                    <h1 class="text-xl sm:text-2xl font-bold">অনলাইন জন্ম নিবন্ধন সহায়িকা ও তথ্য পোর্টাল</h1>
+                    <p class="text-xs text-emerald-100">গণপ্রজাতন্ত্রী বাংলাদেশ সরকার - জন্ম ও মৃত্যু নিবন্ধন সেবা</p>
+                </div>
+            </div>
+            <a href="https://bdris.gov.bd" target="_blank" class="bg-red-600 hover:bg-red-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition shadow flex items-center gap-2">
+                <i class="fas fa-external-link-alt"></i> মূল পোর্টালে যান
+            </a>
+        </div>
+    </header>
 
-<section id="formArea" class="panel hidden">
-<h2 id="formTitle"></h2>
-<p class="small">ফর্মটি পূরণ করে তথ্য যাচাই করুন। প্রয়োজনীয় কাগজপত্র ও সরকারি নিয়ম সংশ্লিষ্ট অফিসে যাচাই করবেন।</p>
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 py-8 flex-grow w-full space-y-8">
 
-<form id="serviceForm">
-<div id="fields"></div>
-<div class="actions no-print">
-<button type="button" onclick="saveRecord()">রেকর্ড সংরক্ষণ</button>
-<button type="button" onclick="printForm()">প্রিন্ট / PDF ডাউনলোড</button>
-<button type="reset" class="secondary">ফর্ম মুছুন</button>
-<button type="button" class="secondary" onclick="closeForm()">বন্ধ করুন</button>
-</div>
-</form>
-<div class="small">
-এই ফর্ম আবেদন প্রস্তুতির সহায়ক। এটি সরকারি আবেদন জমা, অনুমোদন বা সনদ প্রদান করে না।
-</div>
-</section>
+        <!-- Info Card -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div>
+                <h2 class="text-lg font-bold text-emerald-800"><i class="fas fa-edit mr-2"></i>জন্ম নিবন্ধন আবেদন ফরম পূরণ করুন</h2>
+                <p class="text-sm text-slate-600">নিচের ফর্মে সঠিক তথ্য দিয়ে সাবমিট করলে ডানপাশে বা নিচে তাৎক্ষণিক ডিজিটাল সনদের লাইভ প্রিভিউ দেখতে পাবেন।</p>
+            </div>
+        </div>
 
-<section id="recordsPanel" class="panel">
-<h2>📁 সংরক্ষিত রেকর্ড</h2>
-<input id="recordSearch" placeholder="নাম বা রেকর্ড নম্বর দিয়ে খুঁজুন" oninput="showRecords()">
-<div id="records"></div>
-<p class="small">রেকর্ড এই ডিভাইসের ব্রাউজারে সংরক্ষিত থাকে। ব্রাউজারের ডেটা মুছে ফেললে রেকর্ড হারাতে পারে।</p>
-</section>
-</main>
+        <div class="grid lg:grid-cols-2 gap-8">
+            
+            <!-- Left Side: Input Form -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                <h3 class="text-md font-bold text-slate-800 border-b pb-2 text-emerald-700">
+                    <i class="fas fa-user-edit mr-1"></i> প্রয়োজনীয় তথ্যাবলী পূরণ করুন
+                </h3>
 
-<script>
-const services=[
-"জন্ম নিবন্ধন","মৃত্যু নিবন্ধন","জাতীয় পরিচয়পত্র",
-"নাগরিকত্ব সনদ","স্থায়ী বাসিন্দা সনদ","চারিত্রিক সনদ",
-"অবিবাহিত সনদ","ওয়ারিশ সনদ","পারিবারিক সনদ",
-"আয় সনদ","ভূমিহীন সনদ","প্রতিবন্ধী ভাতা",
-"বয়স্ক ভাতা","বিধবা ভাতা","শিক্ষা উপবৃত্তি",
-"ই-পাসপোর্ট","পুলিশ ক্লিয়ারেন্স","ট্রেড লাইসেন্স",
-"ভূমি সেবা","e-TIN","অনলাইন আবেদন সহায়তা"
-];
+                <form id="brnForm" onsubmit="event.preventDefault(); updatePreview();" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">নিবন্ধন কার্যালয়ের নাম (নিবন্ধন অফিস)</label>
+                        <input type="text" id="officeInput" value="চট্টগ্রাম সিটি কর্পোরেশন, চট্টগ্রাম" class="w-full p-2.5 text-sm border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" placeholder="উদাহরণ: ঢাকা দক্ষিণ সিটি কর্পোরেশন">
+                    </div>
 
-const customFields={
-"জন্ম নিবন্ধন":[
-["শিশুর বাংলা নাম","text"],["শিশুর ইংরেজি নাম","text"],
-["জন্ম তারিখ","date"],["জন্মস্থান","text"],
-["লিঙ্গ","select","ছেলে,মেয়ে,অন্যান্য"],
-["পিতার বাংলা নাম","text"],["পিতার ইংরেজি নাম","text"],
-["মাতার বাংলা নাম","text"],["মাতার ইংরেজি নাম","text"],
-["আবেদনকারীর সঙ্গে শিশুর সম্পর্ক","text"]
-],
-"মৃত্যু নিবন্ধন":[
-["মৃত ব্যক্তির নাম","text"],["মৃত্যুর তারিখ","date"],
-["মৃত্যুর স্থান","text"],["মৃত ব্যক্তির পিতার নাম","text"],
-["মৃত ব্যক্তির মাতার নাম","text"]
-],
-"জাতীয় পরিচয়পত্র":[
-["আবেদন / সংশোধনের ধরন","select","নতুন আবেদন,তথ্য সংশোধন,হারানো কার্ড,অন্যান্য"],
-["জন্ম তারিখ","date"],["পেশা","text"],
-["আবেদনের কারণ","textarea"]
-],
-"নাগরিকত্ব সনদ":[["পেশা","text"],["কত বছর ধরে বসবাস করছেন","text"],["সনদের কারণ","textarea"]],
-"স্থায়ী বাসিন্দা সনদ":[["কত বছর ধরে বসবাস করছেন","text"],["সনদের কারণ","textarea"]],
-"চারিত্রিক সনদ":[["পেশা","text"],["সনদের প্রয়োজনীয়তা","textarea"]],
-"অবিবাহিত সনদ":[["বৈবাহিক অবস্থা","text"],["সনদের কারণ","textarea"]],
-"ওয়ারিশ সনদ":[["মৃত ব্যক্তির নাম","text"],["মৃত্যুর তারিখ","date"],["ওয়ারিশের সংখ্যা","number"],["ওয়ারিশদের নাম ও সম্পর্ক","textarea"]],
-"পারিবারিক সনদ":[["পরিবারের সদস্য সংখ্যা","number"],["সদস্যদের নাম ও সম্পর্ক","textarea"]],
-"আয় সনদ":[["পেশা","text"],["মাসিক আনুমানিক আয়","number"],["আয়ের উৎস","text"]],
-"ভূমিহীন সনদ":[["নিজস্ব জমির বিবরণ","textarea"],["সনদের কারণ","textarea"]],
-"প্রতিবন্ধী ভাতা":[["আবেদনের ধরন","text"],["প্রতিবন্ধিতার বিবরণ","textarea"]],
-"বয়স্ক ভাতা":[["জন্ম তারিখ","date"],["পেশা","text"],["আবেদনের কারণ","textarea"]],
-"বিধবা ভাতা":[["স্বামীর নাম","text"],["স্বামীর মৃত্যুর তারিখ","date"],["আবেদনের কারণ","textarea"]],
-"শিক্ষা উপবৃত্তি":[["শিক্ষার্থীর নাম","text"],["শিক্ষাপ্রতিষ্ঠানের নাম","text"],["শ্রেণি","text"],["রোল নম্বর","text"],["অভিভাবকের নাম","text"]],
-"ই-পাসপোর্ট":[["জন্ম তারিখ","date"],["পেশা","text"],["পাসপোর্টের ধরন","select","নতুন,রি-ইস্যু"],["আবেদনের কারণ","textarea"]],
-"পুলিশ ক্লিয়ারেন্স":[["জন্ম তারিখ","date"],["পাসপোর্ট নম্বর (প্রয়োজনে)","text"],["বিদেশ যাওয়ার কারণ","textarea"]],
-"ট্রেড লাইসেন্স":[["প্রতিষ্ঠানের নাম","text"],["ব্যবসার ধরন","text"],["ব্যবসার ঠিকানা","textarea"],["প্রতিষ্ঠানের মালিকের নাম","text"]],
-"ভূমি সেবা":[["মৌজার নাম","text"],["খতিয়ান নম্বর","text"],["দাগ নম্বর","text"],["সেবার ধরন","text"]],
-"e-TIN":[["জন্ম তারিখ","date"],["পেশা","text"],["আবেদনের কারণ","textarea"]],
-"অনলাইন আবেদন সহায়তা":[["কোন সেবার আবেদন","text"],["আবেদনের বিবরণ","textarea"]]
-};
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">১৭ ডিজিটের জন্ম নিবন্ধন নম্বর</label>
+                        <input type="text" id="brnNumInput" maxlength="17" value="20062692004322608" class="w-full p-2.5 text-sm font-mono border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" placeholder="17 ডিজিট লিখুন">
+                    </div>
 
-let currentService="";
-let locationData={divisions:[],districts:[],upazilas:[],unions:[]};
-let currentRecordId="";
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">জন্ম তারিখ</label>
+                            <input type="text" id="dobInput" value="10/02/2006" class="w-full p-2.5 text-sm border rounded-lg outline-none" placeholder="DD/MM/YYYY">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">লিঙ্গ (Sex)</label>
+                            <select id="sexInput" class="w-full p-2.5 text-sm border rounded-lg outline-none">
+                                <option value="Male / পুরুষ">Male / পুরুষ</option>
+                                <option value="Female / নারী">Female / নারী</option>
+                            </select>
+                        </div>
+                    </div>
 
-const $=id=>document.getElementById(id);
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">আবেদনকারীর নাম (বাংলা)</label>
+                            <input type="text" id="nameBnInput" value="মোঃ ইমাদ" class="w-full p-2.5 text-sm border rounded-lg outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Name (English)</label>
+                            <input type="text" id="nameEnInput" value="MD IMAD" class="w-full p-2.5 text-sm border rounded-lg outline-none">
+                        </div>
+                    </div>
 
-function renderServices(){
- $("services").innerHTML="";
- services.forEach((name,i)=>{
-  const card=document.createElement("div");
-  card.className="card";
-  const title=document.createElement("b");
-  title.textContent=(i+1)+". "+name;
-  const p=document.createElement("p");
-  p.textContent="আবেদন প্রস্তুতির ফর্ম";
-  const btn=document.createElement("button");
-  btn.textContent="ফর্ম খুলুন";
-  btn.onclick=()=>openForm(name);
-  card.append(title,p,btn);
-  $("services").appendChild(card);
- });
-}
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">মাতার নাম (বাংলা)</label>
+                            <input type="text" id="motherBnInput" value="রেজু বেগম" class="w-full p-2.5 text-sm border rounded-lg outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Mother's Name (En)</label>
+                            <input type="text" id="motherEnInput" value="REJU BEGUM" class="w-full p-2.5 text-sm border rounded-lg outline-none">
+                        </div>
+                    </div>
 
-function searchServices(){
- const q=$("search").value.trim().toLowerCase();
- [...$("services").children].forEach(c=>{
-  c.style.display=c.innerText.toLowerCase().includes(q)?"":"none";
- });
-}
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">পিতার নাম (বাংলা)</label>
+                            <input type="text" id="fatherBnInput" value="মোঃ দেলোয়ার" class="w-full p-2.5 text-sm border rounded-lg outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Father's Name (En)</label>
+                            <input type="text" id="fatherEnInput" value="MD DELOWAR" class="w-full p-2.5 text-sm border rounded-lg outline-none">
+                        </div>
+                    </div>
 
-function addField(parent,label,type="text",options=[]){
- const wrap=document.createElement("div");
- wrap.className="field";
- const lab=document.createElement("label");
- lab.textContent=label;
- wrap.appendChild(lab);
- let el;
- if(type==="textarea"){
-  el=document.createElement("textarea");
-  el.rows=3;
- }else if(type==="select"){
-  el=document.createElement("select");
-  el.add(new Option("নির্বাচন করুন",""));
-  options.forEach(v=>el.add(new Option(v,v)));
- }else{
-  el=document.createElement("input");
-  el.type=type;
- }
- el.name=label;
- el.required=false;
- wrap.appendChild(el);
- parent.appendChild(wrap);
- return el;
-}
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">জন্মস্থান (বাংলা ও English)</label>
+                            <input type="text" id="pobInput" value="কুমিল্লা, বাংলাদেশ / Cumilla" class="w-full p-2.5 text-sm border rounded-lg outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">স্থায়ী ঠিকানা</label>
+                            <input type="text" id="addressInput" value="কুমিল্লা, বাংলাদেশ" class="w-full p-2.5 text-sm border rounded-lg outline-none">
+                        </div>
+                    </div>
 
-function addAddressFields(parent){
- const heading=document.createElement("h3");
- heading.className="full";
- heading.textContent="ঠিকানার তথ্য";
- parent.appendChild(heading);
+                    <button type="submit" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-semibold py-3 rounded-xl transition shadow flex items-center justify-center gap-2">
+                        <i class="fas fa-sync-alt"></i> সনদের প্রিভিউ আপডেট করুন
+                    </button>
+                </form>
+            </div>
 
- const div=addField(parent,"বিভাগ","select");
- div.id="divisionSelect";
- const dist=addField(parent,"জেলা","select");
- dist.id="districtSelect";
- const up=addField(parent,"উপজেলা / থানা","select");
- up.id="upazilaSelect";
- const uni=addField(parent,"ইউনিয়ন / পৌরসভা / সিটি কর্পোরেশন","select");
- uni.id="unionSelect";
- addField(parent,"গ্রাম / মহল্লা");
- addField(parent,"ডাকঘর");
- addField(parent,"ওয়ার্ড নম্বর");
- addField(parent,"বিস্তারিত ঠিকানা","textarea");
+            <!-- Right Side: Live Certificate Preview -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-md font-bold text-slate-800 text-emerald-700">
+                            <i class="fas fa-file-invoice mr-1"></i> লাইভ নমুনা সনদ প্রিভিউ
+                        </h3>
+                        <button onclick="window.print()" class="text-xs bg-slate-800 text-white px-3 py-1.5 rounded hover:bg-black transition">
+                            <i class="fas fa-print mr-1"></i> প্রিন্ট করুন
+                        </button>
+                    </div>
 
- loadDivisions();
- div.onchange=()=>loadDistricts(div.value);
- dist.onchange=()=>loadUpazilas(dist.value);
- up.onchange=()=>loadUnions(up.value);
-}
+                    <!-- Certificate Box Template -->
+                    <div class="border-4 border-double border-slate-400 p-5 rounded-lg watermark relative bg-white min-h-[500px] text-[11px] leading-tight space-y-3">
+                        
+                        <!-- Top Barcode & QR -->
+                        <div class="flex justify-between items-start">
+                            <div class="w-16 h-16 border p-1 bg-slate-50 flex items-center justify-center text-center text-[9px] text-slate-400">
+                                <i class="fas fa-qrcode text-3xl text-slate-700"></i>
+                            </div>
+                            <div class="text-center space-y-1">
+                                <div class="w-10 h-10 mx-auto rounded-full bg-red-600 flex items-center justify-center text-white text-lg font-bold">🇧🇩</div>
+                                <p class="font-bold text-slate-800 text-[12px]">Government of the People's Republic of Bangladesh</p>
+                                <p class="text-slate-600 text-[10px]">Office of the Registrar, Birth and Death Registration</p>
+                                <p id="prevOffice" class="font-semibold text-emerald-900 text-[11px]">Chattogram City Corporation, Chattogram</p>
+                            </div>
+                            <div class="text-right">
+                                <i class="fas fa-barcode text-3xl text-slate-800"></i>
+                            </div>
+                        </div>
 
-const API="https://bdapis.pro.bd/geo/v2.0/";
+                        <div class="text-center font-bold text-slate-800 border-b pb-2">
+                            জন্ম নিবন্ধন সনদ / Birth Registration Certificate
+                        </div>
 
-async function getList(url){
- const res=await fetch(url);
- if(!res.ok)throw new Error("তথ্য লোড হয়নি");
- const json=await res.json();
- return Array.isArray(json)?json:(json.data||json.results||[]);
-}
-function itemId(x){
- return x.id??x.division_id??x.district_id??x.upazila_id??x.value??"";
-}
-function itemName(x){
- if(typeof x==="string")return x;
- return x.name?.bn||x.name?.local||x.name_bn||x.bn_name||x.name?.en||x.name||"";
-}
-function fillSelect(id,list,placeholder){
- const el=$(id);
- el.innerHTML="";
- el.add(new Option(placeholder,""));
- list.forEach(x=>el.add(new Option(itemName(x),itemId(x))));
-}
-async function loadDivisions(){
- try{
-  const data=await getList(API+"divisions");
-  locationData.divisions=data;
-  fillSelect("divisionSelect",data,"বিভাগ নির্বাচন করুন");
- }catch(e){
-  $("divisionSelect").innerHTML='<option value="">তালিকা লোড হয়নি - পরে চেষ্টা করুন</option>';
- }
-}
-async function loadDistricts(id){
- fillSelect("districtSelect",[],"লোড হচ্ছে...");
- fillSelect("upazilaSelect",[],"আগে জেলা নির্বাচন করুন");
- fillSelect("unionSelect",[],"আগে উপজেলা নির্বাচন করুন");
- try{
-  const data=await getList(API+"districts/"+encodeURIComponent(id));
-  locationData.districts=data;
-  fillSelect("districtSelect",data,"জেলা নির্বাচন করুন");
- }catch(e){fillSelect("districtSelect",[],"তথ্য পাওয়া যায়নি");}
-}
-async function loadUpazilas(id){
- fillSelect("upazilaSelect",[],"লোড হচ্ছে...");
- fillSelect("unionSelect",[],"আগে উপজেলা নির্বাচন করুন");
- try{
-  const data=await getList(API+"upazilas/"+encodeURIComponent(id));
-  locationData.upazilas=data;
-  fillSelect("upazilaSelect",data,"উপজেলা নির্বাচন করুন");
- }catch(e){fillSelect("upazilaSelect",[],"তথ্য পাওয়া যায়নি");}
-}
-async function loadUnions(id){
- fillSelect("unionSelect",[],"লোড হচ্ছে...");
- try{
-  const data=await getList(API+"unions/"+encodeURIComponent(id));
-  locationData.unions=data;
-  fillSelect("unionSelect",data,"ইউনিয়ন নির্বাচন করুন");
- }catch(e){fillSelect("unionSelect",[],"তথ্য পাওয়া যায়নি");}
-}
+                        <!-- Dates & Number -->
+                        <div class="flex justify-between text-[10px] font-semibold border-b pb-2">
+                            <div>Date of Registration: <span id="prevRegDate">20/03/2025</span></div>
+                            <div class="text-center">
+                                Birth Registration Number:<br>
+                                <span id="prevBrn" class="font-mono text-sm font-bold text-red-700">20062692004322608</span>
+                            </div>
+                            <div>Date of Issuance: <span id="prevIssueDate">20/03/2025</span></div>
+                        </div>
 
-function openForm(name){
- currentService=name;
- currentRecordId="";
- $("formArea").classList.remove("hidden");
- $("formTitle").textContent=name+" — আবেদন প্রস্তুতি ফর্ম";
- const fields=$("fields");
- fields.innerHTML="";
- addField(fields,"আবেদনকারীর পূর্ণ নাম");
- addField(fields,"ইংরেজি নাম");
- addField(fields,"পিতার নাম");
- addField(fields,"মাতার নাম");
- addField(fields,"মোবাইল নম্বর","tel");
- addField(fields,"জন্ম তারিখ","date");
+                        <!-- Person Details Grid -->
+                        <div class="space-y-1.5 pt-1">
+                            <div class="grid grid-cols-3">
+                                <span class="font-semibold text-slate-600">Date of Birth:</span>
+                                <span id="prevDob" class="col-span-2 font-bold text-slate-900">10/02/2006</span>
+                            </div>
+                            <div class="grid grid-cols-3">
+                                <span class="font-semibold text-slate-600">Sex:</span>
+                                <span id="prevSex" class="col-span-2 font-bold text-slate-900">Male / পুরুষ</span>
+                            </div>
+                            <div class="grid grid-cols-3 border-t pt-1">
+                                <span class="font-semibold text-slate-600">নাম / Name:</span>
+                                <span id="prevName" class="col-span-2 font-bold text-slate-900">মোঃ ইমাদ / MD IMAD</span>
+                            </div>
+                            <div class="grid grid-cols-3 border-t pt-1">
+                                <span class="font-semibold text-slate-600">মাতার নাম / Mother:</span>
+                                <span id="prevMother" class="col-span-2 font-bold text-slate-900">রেজু বেগম / REJU BEGUM</span>
+                            </div>
+                            <div class="grid grid-cols-3 border-t pt-1">
+                                <span class="font-semibold text-slate-600">পিতার নাম / Father:</span>
+                                <span id="prevFather" class="col-span-2 font-bold text-slate-900">মোঃ দেলোয়ার / MD DELOWAR</span>
+                            </div>
+                            <div class="grid grid-cols-3 border-t pt-1">
+                                <span class="font-semibold text-slate-600">জন্মস্থান / Place of Birth:</span>
+                                <span id="prevPob" class="col-span-2 font-bold text-slate-900">কুমিল্লা, বাংলাদেশ</span>
+                            </div>
+                            <div class="grid grid-cols-3 border-t pt-1">
+                                <span class="font-semibold text-slate-600">স্থায়ী ঠিকানা / Address:</span>
+                                <span id="prevAddress" class="col-span-2 font-bold text-slate-900">কুমিল্লা, বাংলাদেশ</span>
+                            </div>
+                        </div>
 
- const h=document.createElement("h3");
- h.className="full";
- h.textContent="সেবার অতিরিক্ত তথ্য";
- fields.appendChild(h);
- (customFields[name]||[]).forEach(([label,type,opts])=>{
-  addField(fields,label,type,opts?opts.split(","):[]);
- });
+                        <!-- Seal Signature -->
+                        <div class="flex justify-between items-end pt-8 text-[9px] text-slate-500">
+                            <div class="text-center border-t border-slate-400 px-4 pt-1">
+                                Seal & Signature<br><span class="font-semibold text-slate-700">Assistant to Registrar</span>
+                            </div>
+                            <div class="text-center border-t border-slate-400 px-4 pt-1">
+                                Seal & Signature<br><span class="font-semibold text-slate-700">Registrar</span>
+                            </div>
+                        </div>
 
- addAddressFields(fields);
+                    </div>
+                </div>
+            </div>
 
- const end=document.createElement("h3");
- end.className="full";
- end.textContent="অফিস ব্যবহারের জন্য";
- fields.appendChild(end);
- addField(fields,"আবেদনকারীর স্বাক্ষর");
- addField(fields,"কর্তৃপক্ষের স্বাক্ষর (অফিসে পূরণ হবে)");
- addField(fields,"অফিসের সিল (অফিসে প্রদান হবে)");
- addField(fields,"তারিখ");
+        </div>
 
- $("formArea").scrollIntoView({behavior:"smooth"});
-}
+    </main>
 
-function getFormData(){
- const data={};
- $("serviceForm").querySelectorAll("input,select,textarea").forEach(el=>{
-  data[el.name]=el.value;
- });
- return data;
-}
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-4 text-center text-xs border-t border-slate-800">
+        <p>© 2026 বাংলাদেশ ডিজিটাল সেবাসমূহ | এটি তথ্যভিত্তিক সহায়তা পোর্টাল</p>
+    </footer>
 
-function saveRecord(){
- const data=getFormData();
- const name=data["আবেদনকারীর পূর্ণ নাম"]||"নাম দেওয়া হয়নি";
- const records=JSON.parse(localStorage.getItem("jisanRecords")||"[]");
- const record={
-  id:currentRecordId||("JDS-"+Date.now()),
-  service:currentService,
-  name,
-  date:new Date().toLocaleString("bn-BD"),
-  data
- };
- const index=records.findIndex(r=>r.id===record.id);
- if(index>=0)records[index]=record;
- else records.unshift(record);
- localStorage.setItem("jisanRecords",JSON.stringify(records));
- currentRecordId=record.id;
- alert("রেকর্ড সংরক্ষণ হয়েছে। নম্বর: "+record.id);
- showRecords();
-}
+    <script>
+        function updatePreview() {
+            document.getElementById('prevOffice').innerText = document.getElementById('officeInput').value;
+            document.getElementById('prevBrn').innerText = document.getElementById('brnNumInput').value;
+            document.getElementById('prevDob').innerText = document.getElementById('dobInput').value;
+            document.getElementById('prevSex').innerText = document.getElementById('sexInput').value;
+            
+            const nameBn = document.getElementById('nameBnInput').value;
+            const nameEn = document.getElementById('nameEnInput').value;
+            document.getElementById('prevName').innerText = `${nameBn} / ${nameEn}`;
 
-function showRecords(){
- const q=($("recordSearch").value||"").toLowerCase();
- const records=JSON.parse(localStorage.getItem("jisanRecords")||"[]");
- $("records").innerHTML="";
- records.filter(r=>(r.name+" "+r.id+" "+r.service).toLowerCase().includes(q))
- .forEach(r=>{
-  const box=document.createElement("div");
-  box.className="record";
-  const title=document.createElement("b");
-  title.textContent=r.service+" — "+r.name;
-  const info=document.createElement("p");
-  info.textContent="রেকর্ড: "+r.id+" | "+r.date;
-  const open=document.createElement("button");
-  open.textContent="দেখুন / প্রিন্ট";
-  open.onclick=()=>printRecord(r);
-  const del=document.createElement("button");
-  del.textContent="মুছুন";
-  del.className="danger";
-  del.onclick=()=>deleteRecord(r.id);
-  box.append(title,info,open,del);
-  $("records").appendChild(box);
- });
- if(!records.length)$("records").textContent="এখনো কোনো রেকর্ড সংরক্ষণ করা হয়নি।";
-}
+            const mBn = document.getElementById('motherBnInput').value;
+            const mEn = document.getElementById('motherEnInput').value;
+            document.getElementById('prevMother').innerText = `${mBn} / ${mEn}`;
 
-function deleteRecord(id){
- if(!confirm("এই রেকর্ড মুছে ফেলবেন?"))return;
- const records=JSON.parse(localStorage.getItem("jisanRecords")||"[]").filter(r=>r.id!==id);
- localStorage.setItem("jisanRecords",JSON.stringify(records));
- showRecords();
-}
+            const fBn = document.getElementById('fatherBnInput').value;
+            const fEn = document.getElementById('fatherEnInput').value;
+            document.getElementById('prevFather').innerText = `${fBn} / ${fEn}`;
 
-function printForm(){
- const data=getFormData();
- const w=window.open("","_blank");
- if(!w){alert("প্রিন্ট পেজ খুলতে ব্রাউজারে অনুমতি দিন।");return;}
- let html=`<!DOCTYPE html><html lang="bn"><meta charset="UTF-8">
- <title>${currentService}</title><style>
- body{font-family:Arial,sans-serif;padding:25px;color:#111}
- h2{text-align:center}table{width:100%;border-collapse:collapse}
- td{border:1px solid #777;padding:8px}
- .sign{display:flex;justify-content:space-between;margin-top:90px}
- </style><h2>JISAN DIGITAL SEBA</h2>
- <h3 style="text-align:center">${currentService} — আবেদন প্রস্তুতি ফর্ম</h3>
- <p>রেকর্ড নম্বর: ${currentRecordId||"সংরক্ষণের পর পাওয়া যাবে"}</p><table>`;
- Object.entries(data).forEach(([k,v])=>{
-  html+=`<tr><td>${escapeHtml(k)}</td><td>${escapeHtml(v)}</td></tr>`;
- });
- html+=`</table><div class="sign">
- <div>আবেদনকারীর স্বাক্ষর<br><br>________________</div>
- <div>অনুমোদিত কর্মকর্তার স্বাক্ষর ও সিল<br><br>________________</div>
- </div><p style="margin-top:35px">দ্রষ্টব্য: এটি আবেদন প্রস্তুতির সহায়ক ফর্ম, সরকারি সনদ নয়। সংশ্লিষ্ট অফিসে যাচাই করুন।</p>
- <script>window.onload=()=>window.print()<\/script></html>`;
- w.document.write(html);
- w.document.close();
-}
-
-function printRecord(r){
- currentService=r.service;
- currentRecordId=r.id;
- const w=window.open("","_blank");
- if(!w){alert("পপ-আপ অনুমতি দিন");return;}
- let html=`<!DOCTYPE html><html lang="bn"><meta charset="UTF-8">
- <title>রেকর্ড ${r.id}</title><style>
- body{font-family:Arial;padding:25px}table{width:100%;border-collapse:collapse}
- td{border:1px solid #777;padding:8px}.sign{display:flex;justify-content:space-between;margin-top:90px}
- </style><h2 style="text-align:center">JISAN DIGITAL SEBA</h2>
- <h3>${escapeHtml(r.service)}</h3><p>রেকর্ড নম্বর: ${r.id}</p><table>`;
- Object.entries(r.data).forEach(([k,v])=>html+=`<tr><td>${escapeHtml(k)}</td><td>${escapeHtml(v)}</td></tr>`);
- html+=`</table><div class="sign"><div>আবেদনকারীর স্বাক্ষর<br><br>___________</div>
- <div>কর্তৃপক্ষের স্বাক্ষর ও সিল<br><br>___________</div></div>
- <p>এটি আবেদন প্রস্তুতির সহায়ক ফর্ম, সরকারি সনদ নয়।</p>
- <script>window.onload=()=>window.print()<\/script></html>`;
- w.document.write(html);w.document.close();
-}
-function escapeHtml(s){
- return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-}
-function closeForm(){$("formArea").classList.add("hidden");}
-renderServices();
-showRecords();
-</script>
+            document.getElementById('prevPob').innerText = document.getElementById('pobInput').value;
+            document.getElementById('prevAddress').innerText = document.getElementById('addressInput').value;
+        }
+    </script>
 </body>
 </html>
