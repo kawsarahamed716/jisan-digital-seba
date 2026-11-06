@@ -8,163 +8,187 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=SolaimanLipi&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'SolaimanLipi', 'Roboto', sans-serif; }
-        .cert-border {
-            border: 2px solid #000;
+        body { font-family: 'SolaimanLipi', 'Roboto', sans-serif; background-color: #e2e8f0; }
+        .cert-container {
+            max-width: 680px;
+            margin: 20px auto;
+            background: #ffffff;
+            border: 3px double #333;
             padding: 24px;
             position: relative;
-            background-color: #fff;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
         }
-        /* Circular Government Seal Watermark Background */
-        .watermark-bg {
-            position: relative;
-        }
-        .watermark-bg::before {
-            content: "";
+        /* Official Red/Pinkish Circular Watermark Seal */
+        .official-watermark {
             position: absolute;
-            top: 50%;
+            top: 48%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 320px;
-            height: 320px;
-            background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.05) 70%, transparent 100%);
-            border: 8px solid rgba(16, 185, 129, 0.2);
+            width: 380px;
+            height: 380px;
+            border: 6px solid rgba(220, 38, 38, 0.25);
             border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             pointer-events: none;
-            z-index: 0;
+            z-index: 1;
+            background: radial-gradient(circle, rgba(239, 68, 68, 0.12) 0%, rgba(255, 255, 255, 0) 75%);
+        }
+        .watermark-content {
+            text-align: center;
+            color: rgba(185, 28, 28, 0.35);
+            font-weight: bold;
+            font-size: 13px;
+            line-height: 1.2;
+            width: 320px;
+        }
+        .content-layer {
+            position: relative;
+            z-index: 2;
         }
     </style>
 </head>
-<body class="bg-slate-200 min-h-screen p-4 flex justify-center items-center">
+<body class="p-2 sm:p-4">
 
-    <div class="max-w-2xl w-full bg-white shadow-2xl p-6 cert-border watermark-bg text-black relative">
+    <div class="cert-container">
         
-        <!-- Top Header Area -->
-        <div class="flex justify-between items-start mb-2 relative z-10">
-            <!-- QR Code Placeholder -->
-            <div class="w-20 h-20 border border-black p-1 flex items-center justify-center">
-                <i class="fas fa-qrcode text-5xl"></i>
-            </div>
-
-            <!-- Central Govt Seal & Title -->
-            <div class="text-center">
-                <div class="w-12 h-12 mx-auto mb-1 rounded-full border-2 border-green-700 flex items-center justify-center bg-red-600 text-white font-bold text-xl">
-                    🇧🇩
+        <!-- Background Seal Watermark -->
+        <div class="official-watermark">
+            <div class="watermark-content">
+                <p class="text-sm mb-1">রেজিস্ট্রারের কার্যালয়</p>
+                <div class="my-2 opacity-50 flex justify-center">
+                    <i class="fas fa-globe-asia text-7xl"></i>
                 </div>
-                <h1 class="font-bold text-sm leading-tight text-slate-900">Government of the People's Republic of Bangladesh</h1>
-                <p class="text-[11px] text-slate-700">Office of the Registrar, Birth and Death Registration</p>
-                <p class="text-[12px] font-semibold text-slate-900 mt-2">Chattogram City Corporation, Chattogram</p>
-                <p class="text-[10px] text-slate-500">(Rule 9, 10)</p>
-            </div>
-
-            <!-- Barcode Placeholder -->
-            <div class="text-right">
-                <i class="fas fa-barcode text-5xl"></i>
+                <p class="text-xs">জন্ম ও মৃত্যু নিবন্ধন, স্থানীয় সরকার বিভাগ</p>
             </div>
         </div>
 
-        <!-- Main Title -->
-        <div class="text-center font-bold text-base border-b border-black pb-1 mb-3 relative z-10">
-            জন্ম নিবন্ধন সনদ / Birth Registration Certificate
-        </div>
+        <div class="content-layer">
+            <!-- Top Header (QR, Logo, Barcode) -->
+            <div class="flex justify-between items-start mb-2">
+                <div class="w-16 h-16 sm:w-20 sm:h-20 border border-slate-400 p-1 bg-white flex items-center justify-center shrink-0">
+                    <i class="fas fa-qrcode text-4xl sm:text-5xl text-slate-800"></i>
+                </div>
 
-        <!-- Registration Info Row -->
-        <div class="flex justify-between items-center text-[11px] mb-4 relative z-10">
-            <div>
-                <span class="text-slate-600">Date of Registration</span><br>
-                <span class="font-bold">20/03/2025</span>
-            </div>
-            <div class="text-center">
-                <span class="text-slate-600">Birth Registration Number</span><br>
-                <span class="font-mono text-base font-bold tracking-wider">20062692004322608</span>
-            </div>
-            <div class="text-right">
-                <span class="text-slate-600">Date of Issuance</span><br>
-                <span class="font-bold">20/03/2025</span>
-            </div>
-        </div>
+                <div class="text-center px-1">
+                    <div class="w-10 h-10 mx-auto mb-1 rounded-full border border-green-700 flex items-center justify-center bg-red-600 text-white font-bold text-sm shadow">
+                        🇧🇩
+                    </div>
+                    <h1 class="font-bold text-[11px] sm:text-xs text-slate-900 leading-tight">Government of the People's Republic of Bangladesh</h1>
+                    <p class="text-[9px] sm:text-[10px] text-slate-700">Office of the Registrar, Birth and Death Registration</p>
+                    <p class="text-[11px] sm:text-[12px] font-semibold text-slate-900 mt-1">Chattogram City Corporation, Chattogram</p>
+                    <p class="text-[9px] text-slate-600">(Rule 9, 10)</p>
+                </div>
 
-        <!-- Two Column Detailed Info Table -->
-        <div class="space-y-2 text-[12px] leading-relaxed relative z-10 border-t border-slate-200 pt-3">
-            
-            <div class="grid grid-cols-12">
-                <div class="col-span-3 font-semibold">Date of Birth</div>
-                <div class="col-span-3 font-bold">: 10/02/2006</div>
-                <div class="col-span-3 font-semibold">Sex</div>
-                <div class="col-span-3 font-bold">: Male</div>
+                <div class="text-right shrink-0">
+                    <i class="fas fa-barcode text-4xl sm:text-5xl text-slate-800"></i>
+                </div>
             </div>
 
-            <div class="grid grid-cols-12">
-                <div class="col-span-3 font-semibold">In Word</div>
-                <div class="col-span-9 font-bold">: 10th of February Two Thousand Six</div>
+            <!-- Title -->
+            <div class="text-center font-bold text-sm sm:text-base border-b-2 border-slate-800 pb-1 mb-3 text-slate-900">
+                জন্ম নিবন্ধন সনদ / Birth Registration Certificate
             </div>
 
-            <div class="grid grid-cols-12 border-t border-slate-100 pt-1">
-                <div class="col-span-3 font-semibold">নাম</div>
-                <div class="col-span-3 font-bold">: মোঃ ইমাদ</div>
-                <div class="col-span-3 font-semibold">Name</div>
-                <div class="col-span-3 font-bold">: MD IMAD</div>
+            <!-- Registration Number & Dates Bar -->
+            <div class="grid grid-cols-3 text-[10px] sm:text-[11px] mb-4 bg-slate-50/80 p-2 rounded border border-slate-300 text-center items-center">
+                <div>
+                    <span class="text-slate-600 block text-[9px]">Date of Registration</span>
+                    <span class="font-bold text-slate-900">20/03/2025</span>
+                </div>
+                <div>
+                    <span class="text-slate-600 block text-[9px]">Birth Registration Number</span>
+                    <span class="font-mono text-xs sm:text-sm font-bold text-red-700 tracking-wider">20062692004322608</span>
+                </div>
+                <div>
+                    <span class="text-slate-600 block text-[9px]">Date of Issuance</span>
+                    <span class="font-bold text-slate-900">20/03/2025</span>
+                </div>
             </div>
 
-            <div class="grid grid-cols-12 border-t border-slate-100 pt-1">
-                <div class="col-span-3 font-semibold">মাতা</div>
-                <div class="col-span-3 font-bold">: রেজু বেগম</div>
-                <div class="col-span-3 font-semibold">Mother</div>
-                <div class="col-span-3 font-bold">: REJU BEGUM</div>
+            <!-- Detailed Information Rows -->
+            <div class="space-y-1.5 text-[11px] sm:text-[12px] leading-relaxed border-t border-slate-300 pt-2 text-slate-900">
+                
+                <div class="grid grid-cols-12 gap-1">
+                    <div class="col-span-3 font-semibold text-slate-700">Date of Birth</div>
+                    <div class="col-span-3 font-bold">: 10/02/2006</div>
+                    <div class="col-span-3 font-semibold text-slate-700">Sex</div>
+                    <div class="col-span-3 font-bold">: Male</div>
+                </div>
+
+                <div class="grid grid-cols-12 gap-1">
+                    <div class="col-span-3 font-semibold text-slate-700">In Word</div>
+                    <div class="col-span-9 font-bold">: Tenth of February Two Thousand Six</div>
+                </div>
+
+                <div class="grid grid-cols-12 gap-1 border-t border-slate-200 pt-1">
+                    <div class="col-span-3 font-semibold text-slate-700">নাম</div>
+                    <div class="col-span-3 font-bold">: মোঃ ইমাদ</div>
+                    <div class="col-span-3 font-semibold text-slate-700">Name</div>
+                    <div class="col-span-3 font-bold">: MD IMAD</div>
+                </div>
+
+                <div class="grid grid-cols-12 gap-1 border-t border-slate-200 pt-1">
+                    <div class="col-span-3 font-semibold text-slate-700">মাতা</div>
+                    <div class="col-span-3 font-bold">: রেজু বেগম</div>
+                    <div class="col-span-3 font-semibold text-slate-700">Mother</div>
+                    <div class="col-span-3 font-bold">: REJU BEGUM</div>
+                </div>
+
+                <div class="grid grid-cols-12 gap-1 border-t border-slate-200 pt-1">
+                    <div class="col-span-3 font-semibold text-slate-700">মাতার জাতীয়তা</div>
+                    <div class="col-span-3 font-bold">: বাংলাদেশী</div>
+                    <div class="col-span-3 font-semibold text-slate-700">Nationality</div>
+                    <div class="col-span-3 font-bold">: Bangladeshi</div>
+                </div>
+
+                <div class="grid grid-cols-12 gap-1 border-t border-slate-200 pt-1">
+                    <div class="col-span-3 font-semibold text-slate-700">পিতা</div>
+                    <div class="col-span-3 font-bold">: মোঃ দেলোয়ার</div>
+                    <div class="col-span-3 font-semibold text-slate-700">Father</div>
+                    <div class="col-span-3 font-bold">: MD DELOWAR</div>
+                </div>
+
+                <div class="grid grid-cols-12 gap-1 border-t border-slate-200 pt-1">
+                    <div class="col-span-3 font-semibold text-slate-700">পিতার জাতীয়তা</div>
+                    <div class="col-span-3 font-bold">: বাংলাদেশী</div>
+                    <div class="col-span-3 font-semibold text-slate-700">Nationality</div>
+                    <div class="col-span-3 font-bold">: Bangladeshi</div>
+                </div>
+
+                <div class="grid grid-cols-12 gap-1 border-t border-slate-200 pt-1">
+                    <div class="col-span-3 font-semibold text-slate-700">জন্মস্থান</div>
+                    <div class="col-span-3 font-bold">: কুমিল্লা, বাংলাদেশ</div>
+                    <div class="col-span-3 font-semibold text-slate-700">Place of Birth</div>
+                    <div class="col-span-3 font-bold">: Cumilla</div>
+                </div>
+
+                <div class="grid grid-cols-12 gap-1 border-t border-slate-200 pt-1">
+                    <div class="col-span-3 font-semibold text-slate-700">স্থায়ী ঠিকানা</div>
+                    <div class="col-span-3 font-bold">: কুমিল্লা, বাংলাদেশ</div>
+                    <div class="col-span-3 font-semibold text-slate-700">Permanent Address</div>
+                    <div class="col-span-3 font-bold">: Cumilla, Bangladesh</div>
+                </div>
+
             </div>
 
-            <div class="grid grid-cols-12 border-t border-slate-100 pt-1">
-                <div class="col-span-3 font-semibold">মাতার জাতীয়তা</div>
-                <div class="col-span-3 font-bold">: বাংলাদেশী</div>
-                <div class="col-span-3 font-semibold">Nationality</div>
-                <div class="col-span-3 font-bold">: Bangladeshi</div>
+            <!-- Signatures Section -->
+            <div class="flex justify-between items-end mt-12 pt-4 text-[11px] text-slate-800">
+                <div class="text-center">
+                    <div class="border-t border-slate-800 w-32 sm:w-40 pt-1 font-bold">Seal & Signature</div>
+                    <div class="text-[10px] text-slate-600">Assistant to Registrar</div>
+                </div>
+                <div class="text-center">
+                    <div class="border-t border-slate-800 w-32 sm:w-40 pt-1 font-bold">Seal & Signature</div>
+                    <div class="text-[10px] text-slate-600">Registrar</div>
+                </div>
             </div>
 
-            <div class="grid grid-cols-12 border-t border-slate-100 pt-1">
-                <div class="col-span-3 font-semibold">পিতা</div>
-                <div class="col-span-3 font-bold">: মোঃ দেলোয়ার</div>
-                <div class="col-span-3 font-semibold">Father</div>
-                <div class="col-span-3 font-bold">: MD DELOWAR</div>
+            <!-- Footer Verification Note -->
+            <div class="text-center text-[8px] sm:text-[9px] text-slate-500 mt-6 border-t border-slate-300 pt-2">
+                This certificate is generated from bdris.gov.bd, and to verify this certificate, please scan the above QR Code & Bar Code.
             </div>
-
-            <div class="grid grid-cols-12 border-t border-slate-100 pt-1">
-                <div class="col-span-3 font-semibold">পিতার জাতীয়তা</div>
-                <div class="col-span-3 font-bold">: বাংলাদেশী</div>
-                <div class="col-span-3 font-semibold">Nationality</div>
-                <div class="col-span-3 font-bold">: Bangladeshi</div>
-            </div>
-
-            <div class="grid grid-cols-12 border-t border-slate-100 pt-1">
-                <div class="col-span-3 font-semibold">জন্মস্থান</div>
-                <div class="col-span-3 font-bold">: কুমিল্লা, বাংলাদেশ</div>
-                <div class="col-span-3 font-semibold">Place of Birth</div>
-                <div class="col-span-3 font-bold">: Cumilla</div>
-            </div>
-
-            <div class="grid grid-cols-12 border-t border-slate-100 pt-1">
-                <div class="col-span-3 font-semibold">স্থায়ী ঠিকানা</div>
-                <div class="col-span-3 font-bold">: কুমিল্লা, বাংলাদেশ</div>
-                <div class="col-span-3 font-semibold">Permanent Address</div>
-                <div class="col-span-3 font-bold">: Cumilla, Bangladesh</div>
-            </div>
-
-        </div>
-
-        <!-- Bottom Signatures Area -->
-        <div class="flex justify-between items-end mt-16 pt-4 text-[11px] relative z-10">
-            <div class="text-center">
-                <div class="border-t border-black w-36 pt-1 font-bold">Seal & Signature</div>
-                <div class="text-[10px] text-slate-600">Assistant to Registrar</div>
-            </div>
-            <div class="text-center">
-                <div class="border-t border-black w-36 pt-1 font-bold">Seal & Signature</div>
-                <div class="text-[10px] text-slate-600">Registrar</div>
-            </div>
-        </div>
-
-        <!-- Footer Notice -->
-        <div class="text-center text-[9px] text-slate-500 mt-6 relative z-10 border-t border-slate-200 pt-1">
-            This certificate is generated from bdris.gov.bd, and to verify this certificate, please scan the above QR Code & Bar Code.
         </div>
 
     </div>
