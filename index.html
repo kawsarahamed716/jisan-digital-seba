@@ -7,19 +7,33 @@
 <title>JISAN DIGITAL SEBA</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f0f7f2;color:#173c2a}
-header{background:#087443;color:white;text-align:center;padding:22px 10px}
-main{max-width:1100px;margin:auto;padding:15px}
+body{margin:0;background:#f0f7f2;color:#203b2b;font-family:Arial,"Noto Sans Bengali",sans-serif;line-height:1.6}
+header{background:#087443;color:white;text-align:center;padding:22px 12px}
+main{max-width:1050px;margin:auto;padding:15px}
+h2{color:#087443}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.service{background:white;padding:15px;border-radius:12px;border:1px solid #d5e8db}
-button{background:#087443;color:white;border:0;padding:11px 15px;border-radius:7px;cursor:pointer}
-input,select,textarea{width:100%;padding:11px;margin:6px 0 12px;border:1px solid #bbb;border-radius:7px;font-size:16px}
-label{font-weight:bold}
-#formArea{background:white;padding:18px;border-radius:12px;margin-top:20px}
-.hidden{display:none}
+.card,.panel{background:white;border-radius:12px;padding:15px;border:1px solid #dce9df;margin-bottom:12px}
+button{background:#087443;color:white;border:0;border-radius:7px;padding:11px 15px;margin:4px;cursor:pointer;font-size:15px}
+button.secondary{background:#52665a}
+button.danger{background:#a52b2b}
+input,select,textarea{width:100%;padding:11px;margin:5px 0 13px;border:1px solid #b8c9bd;border-radius:7px;font-size:16px;background:white}
+label{font-weight:bold;display:block}
+.hidden{display:none!important}
+.small{font-size:13px;color:#596b60}
+.actions{display:flex;flex-wrap:wrap;gap:5px}
+#fields{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+.full{grid-column:1/-1}
+.record{border-bottom:1px solid #ddd;padding:10px 0}
 @media(max-width:650px){.grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:360px){.grid{grid-template-columns:1fr}}
-@media print{header,.grid,.no-print{display:none!important}body{background:white}}
+@media print{
+ header,.grid,.no-print,#recordsPanel{display:none!important}
+ body{background:white;color:black}
+ main{max-width:100%;padding:0}
+ .panel{border:0}
+ input,select,textarea{border:0;border-bottom:1px solid #777;border-radius:0}
+ #formArea{display:block!important}
+}
 </style>
 </head>
 <body>
@@ -27,136 +41,373 @@ label{font-weight:bold}
 <h1>🌿 JISAN DIGITAL SEBA</h1>
 <p>নাগরিক সেবা — এক জায়গায়, সহজ বাংলায়</p>
 </header>
+
 <main>
-<h2>আমাদের ২১টি সেবা</h2>
+<div class="panel">
+<h2>২১টি নাগরিক সেবা</h2>
+<input id="search" placeholder="সেবার নাম লিখে খুঁজুন..." oninput="searchServices()">
 <div class="grid" id="services"></div>
-<section id="formArea" class="hidden">
+</div>
+
+<section id="formArea" class="panel hidden">
 <h2 id="formTitle"></h2>
+<p class="small">ফর্মটি পূরণ করে তথ্য যাচাই করুন। প্রয়োজনীয় কাগজপত্র ও সরকারি নিয়ম সংশ্লিষ্ট অফিসে যাচাই করবেন।</p>
+
 <form id="serviceForm">
 <div id="fields"></div>
-<button type="button" onclick="window.print()" class="no-print">প্রিন্ট / PDF সংরক্ষণ</button>
-<button type="reset" class="no-print">ফর্ম মুছুন</button>
+<div class="actions no-print">
+<button type="button" onclick="saveRecord()">রেকর্ড সংরক্ষণ</button>
+<button type="button" onclick="printForm()">প্রিন্ট / PDF ডাউনলোড</button>
+<button type="reset" class="secondary">ফর্ম মুছুন</button>
+<button type="button" class="secondary" onclick="closeForm()">বন্ধ করুন</button>
+</div>
 </form>
-<p>এটি আবেদন প্রস্তুতির সহায়ক ফর্ম, সরকারি আবেদন জমা দেওয়ার ফর্ম নয়।</p>
+<div class="small">
+এই ফর্ম আবেদন প্রস্তুতির সহায়ক। এটি সরকারি আবেদন জমা, অনুমোদন বা সনদ প্রদান করে না।
+</div>
+</section>
+
+<section id="recordsPanel" class="panel">
+<h2>📁 সংরক্ষিত রেকর্ড</h2>
+<input id="recordSearch" placeholder="নাম বা রেকর্ড নম্বর দিয়ে খুঁজুন" oninput="showRecords()">
+<div id="records"></div>
+<p class="small">রেকর্ড এই ডিভাইসের ব্রাউজারে সংরক্ষিত থাকে। ব্রাউজারের ডেটা মুছে ফেললে রেকর্ড হারাতে পারে।</p>
 </section>
 </main>
-<script>
-const divisions={
-"ঢাকা বিভাগ":["ঢাকা","ফরিদপুর","গাজীপুর","গোপালগঞ্জ","কিশোরগঞ্জ","মাদারীপুর","মানিকগঞ্জ","মুন্সীগঞ্জ","নারায়ণগঞ্জ","নরসিংদী","রাজবাড়ী","শরীয়তপুর","টাঙ্গাইল"],
-"চট্টগ্রাম বিভাগ":["বান্দরবান","ব্রাহ্মণবাড়িয়া","চাঁদপুর","চট্টগ্রাম","কুমিল্লা","কক্সবাজার","ফেনী","খাগড়াছড়ি","লক্ষ্মীপুর","নোয়াখালী","রাঙ্গামাটি"],
-"রাজশাহী বিভাগ":["বগুড়া","জয়পুরহাট","নওগাঁ","নাটোর","চাঁপাইনবাবগঞ্জ","পাবনা","রাজশাহী","সিরাজগঞ্জ"],
-"খুলনা বিভাগ":["বাগেরহাট","চুয়াডাঙ্গা","যশোর","ঝিনাইদহ","খুলনা","কুষ্টিয়া","মাগুরা","মেহেরপুর","নড়াইল","সাতক্ষীরা"],
-"বরিশাল বিভাগ":["বরগুনা","বরিশাল","ভোলা","ঝালকাঠি","পটুয়াখালী","পিরোজপুর"],
-"সিলেট বিভাগ":["হবিগঞ্জ","মৌলভীবাজার","সুনামগঞ্জ","সিলেট"],
-"রংপুর বিভাগ":["দিনাজপুর","গাইবান্ধা","কুড়িগ্রাম","লালমনিরহাট","নীলফামারী","পঞ্চগড়","রংপুর","ঠাকুরগাঁও"],
-"ময়মনসিংহ বিভাগ":["জামালপুর","ময়মনসিংহ","নেত্রকোণা","শেরপুর"]
-};
 
+<script>
 const services=[
-"জন্ম নিবন্ধন","মৃত্যু নিবন্ধন","জাতীয় পরিচয়পত্র","নাগরিকত্ব সনদ",
-"স্থায়ী বাসিন্দা সনদ","চারিত্রিক সনদ","অবিবাহিত সনদ","ওয়ারিশ সনদ",
-"পারিবারিক সনদ","আয় সনদ","ভূমিহীন সনদ","প্রতিবন্ধী ভাতা",
-"বয়স্ক ভাতা","বিধবা ভাতা","শিক্ষা উপবৃত্তি","ই-পাসপোর্ট",
-"পুলিশ ক্লিয়ারেন্স","ট্রেড লাইসেন্স","ভূমি সেবা","e-TIN","অনলাইন আবেদন সহায়তা"
+"জন্ম নিবন্ধন","মৃত্যু নিবন্ধন","জাতীয় পরিচয়পত্র",
+"নাগরিকত্ব সনদ","স্থায়ী বাসিন্দা সনদ","চারিত্রিক সনদ",
+"অবিবাহিত সনদ","ওয়ারিশ সনদ","পারিবারিক সনদ",
+"আয় সনদ","ভূমিহীন সনদ","প্রতিবন্ধী ভাতা",
+"বয়স্ক ভাতা","বিধবা ভাতা","শিক্ষা উপবৃত্তি",
+"ই-পাসপোর্ট","পুলিশ ক্লিয়ারেন্স","ট্রেড লাইসেন্স",
+"ভূমি সেবা","e-TIN","অনলাইন আবেদন সহায়তা"
 ];
 
-const servicesBox=document.getElementById("services");
-services.forEach((name,i)=>{
- const card=document.createElement("div");
- card.className="service";
- card.innerHTML=`<b>${i+1}. ${name}</b><p>আবেদন প্রস্তুতির ফর্ম পূরণ করুন</p><button type="button">ফর্ম খুলুন</button>`;
- card.querySelector("button").onclick=()=>openForm(name);
- servicesBox.appendChild(card);
-});
+const customFields={
+"জন্ম নিবন্ধন":[
+["শিশুর বাংলা নাম","text"],["শিশুর ইংরেজি নাম","text"],
+["জন্ম তারিখ","date"],["জন্মস্থান","text"],
+["লিঙ্গ","select","ছেলে,মেয়ে,অন্যান্য"],
+["পিতার বাংলা নাম","text"],["পিতার ইংরেজি নাম","text"],
+["মাতার বাংলা নাম","text"],["মাতার ইংরেজি নাম","text"],
+["আবেদনকারীর সঙ্গে শিশুর সম্পর্ক","text"]
+],
+"মৃত্যু নিবন্ধন":[
+["মৃত ব্যক্তির নাম","text"],["মৃত্যুর তারিখ","date"],
+["মৃত্যুর স্থান","text"],["মৃত ব্যক্তির পিতার নাম","text"],
+["মৃত ব্যক্তির মাতার নাম","text"]
+],
+"জাতীয় পরিচয়পত্র":[
+["আবেদন / সংশোধনের ধরন","select","নতুন আবেদন,তথ্য সংশোধন,হারানো কার্ড,অন্যান্য"],
+["জন্ম তারিখ","date"],["পেশা","text"],
+["আবেদনের কারণ","textarea"]
+],
+"নাগরিকত্ব সনদ":[["পেশা","text"],["কত বছর ধরে বসবাস করছেন","text"],["সনদের কারণ","textarea"]],
+"স্থায়ী বাসিন্দা সনদ":[["কত বছর ধরে বসবাস করছেন","text"],["সনদের কারণ","textarea"]],
+"চারিত্রিক সনদ":[["পেশা","text"],["সনদের প্রয়োজনীয়তা","textarea"]],
+"অবিবাহিত সনদ":[["বৈবাহিক অবস্থা","text"],["সনদের কারণ","textarea"]],
+"ওয়ারিশ সনদ":[["মৃত ব্যক্তির নাম","text"],["মৃত্যুর তারিখ","date"],["ওয়ারিশের সংখ্যা","number"],["ওয়ারিশদের নাম ও সম্পর্ক","textarea"]],
+"পারিবারিক সনদ":[["পরিবারের সদস্য সংখ্যা","number"],["সদস্যদের নাম ও সম্পর্ক","textarea"]],
+"আয় সনদ":[["পেশা","text"],["মাসিক আনুমানিক আয়","number"],["আয়ের উৎস","text"]],
+"ভূমিহীন সনদ":[["নিজস্ব জমির বিবরণ","textarea"],["সনদের কারণ","textarea"]],
+"প্রতিবন্ধী ভাতা":[["আবেদনের ধরন","text"],["প্রতিবন্ধিতার বিবরণ","textarea"]],
+"বয়স্ক ভাতা":[["জন্ম তারিখ","date"],["পেশা","text"],["আবেদনের কারণ","textarea"]],
+"বিধবা ভাতা":[["স্বামীর নাম","text"],["স্বামীর মৃত্যুর তারিখ","date"],["আবেদনের কারণ","textarea"]],
+"শিক্ষা উপবৃত্তি":[["শিক্ষার্থীর নাম","text"],["শিক্ষাপ্রতিষ্ঠানের নাম","text"],["শ্রেণি","text"],["রোল নম্বর","text"],["অভিভাবকের নাম","text"]],
+"ই-পাসপোর্ট":[["জন্ম তারিখ","date"],["পেশা","text"],["পাসপোর্টের ধরন","select","নতুন,রি-ইস্যু"],["আবেদনের কারণ","textarea"]],
+"পুলিশ ক্লিয়ারেন্স":[["জন্ম তারিখ","date"],["পাসপোর্ট নম্বর (প্রয়োজনে)","text"],["বিদেশ যাওয়ার কারণ","textarea"]],
+"ট্রেড লাইসেন্স":[["প্রতিষ্ঠানের নাম","text"],["ব্যবসার ধরন","text"],["ব্যবসার ঠিকানা","textarea"],["প্রতিষ্ঠানের মালিকের নাম","text"]],
+"ভূমি সেবা":[["মৌজার নাম","text"],["খতিয়ান নম্বর","text"],["দাগ নম্বর","text"],["সেবার ধরন","text"]],
+"e-TIN":[["জন্ম তারিখ","date"],["পেশা","text"],["আবেদনের কারণ","textarea"]],
+"অনলাইন আবেদন সহায়তা":[["কোন সেবার আবেদন","text"],["আবেদনের বিবরণ","textarea"]]
+};
 
-function openForm(name){
- document.getElementById("formArea").classList.remove("hidden");
- document.getElementById("formTitle").textContent=name+" — আবেদন প্রস্তুতি ফর্ম";
- const fields=document.getElementById("fields");
- fields.innerHTML="";
- const common=[
- ["আবেদনকারীর পূর্ণ নাম","text"],
- ["ইংরেজি নাম","text"],
- ["পিতার নাম","text"],
- ["মাতার নাম","text"],
- ["জন্ম তারিখ","date"],
- ["মোবাইল নম্বর","tel"],
- ["গ্রাম / মহল্লা","text"],
- ["ডাকঘর","text"]
- ];
- common.forEach(([label,type])=>addInput(fields,label,type));
+let currentService="";
+let locationData={divisions:[],districts:[],upazilas:[],unions:[]};
+let currentRecordId="";
 
- addSelect(fields,"বিভাগ",Object.keys(divisions),"division");
- addSelect(fields,"জেলা",[],"district");
+const $=id=>document.getElementById(id);
 
- const division=fields.querySelector('[name="division"]');
- const district=fields.querySelector('[name="district"]');
- division.onchange=()=>{
-  district.innerHTML='<option value="">জেলা নির্বাচন করুন</option>';
-  (divisions[division.value]||[]).forEach(d=>{
-   district.add(new Option(d,d));
-  });
- };
-
- addInput(fields,"উপজেলা / থানা","text");
- addInput(fields,"ইউনিয়ন / পৌরসভা / সিটি কর্পোরেশন","text");
- addInput(fields,"ওয়ার্ড নম্বর","text");
- addInput(fields,"বিস্তারিত ঠিকানা","textarea");
- addInput(fields,"প্রয়োজনীয় অতিরিক্ত তথ্য","textarea");
-
- if(name==="জন্ম নিবন্ধন"){
-  addInput(fields,"শিশুর বাংলা নাম","text");
-  addInput(fields,"শিশুর ইংরেজি নাম","text");
-  addInput(fields,"জন্মস্থান","text");
-  addInput(fields,"লিঙ্গ","text");
-  addInput(fields,"পিতার ইংরেজি নাম","text");
-  addInput(fields,"মাতার ইংরেজি নাম","text");
- }
- if(name==="মৃত্যু নিবন্ধন"){
-  addInput(fields,"মৃত ব্যক্তির নাম","text");
-  addInput(fields,"মৃত্যুর তারিখ","date");
-  addInput(fields,"মৃত্যুর স্থান","text");
- }
- if(name==="ই-পাসপোর্ট"){
-  addInput(fields,"পাসপোর্টের ধরন","text");
-  addInput(fields,"পেশা","text");
- }
- if(name==="ট্রেড লাইসেন্স"){
-  addInput(fields,"প্রতিষ্ঠানের নাম","text");
-  addInput(fields,"ব্যবসার ধরন","text");
- }
- if(name.includes("ভাতা")){
-  addInput(fields,"জাতীয় পরিচয়পত্র নম্বর (নিজে লিখুন/প্রিন্টের জন্য)","text");
-  addInput(fields,"মাসিক আয়","text");
- }
- if(name==="e-TIN"){
-  addInput(fields,"করদাতার নাম","text");
-  addInput(fields,"পেশা","text");
- }
- addInput(fields,"আবেদনকারীর স্বাক্ষর","text");
- document.getElementById("formArea").scrollIntoView({behavior:"smooth"});
+function renderServices(){
+ $("services").innerHTML="";
+ services.forEach((name,i)=>{
+  const card=document.createElement("div");
+  card.className="card";
+  const title=document.createElement("b");
+  title.textContent=(i+1)+". "+name;
+  const p=document.createElement("p");
+  p.textContent="আবেদন প্রস্তুতির ফর্ম";
+  const btn=document.createElement("button");
+  btn.textContent="ফর্ম খুলুন";
+  btn.onclick=()=>openForm(name);
+  card.append(title,p,btn);
+  $("services").appendChild(card);
+ });
 }
 
-function addInput(parent,label,type){
+function searchServices(){
+ const q=$("search").value.trim().toLowerCase();
+ [...$("services").children].forEach(c=>{
+  c.style.display=c.innerText.toLowerCase().includes(q)?"":"none";
+ });
+}
+
+function addField(parent,label,type="text",options=[]){
  const wrap=document.createElement("div");
- const safeLabel=label.replace(/&/g,"&amp;").replace(/</g,"&lt;");
- wrap.innerHTML=`<label>${safeLabel}</label>`;
- const el=type==="textarea"?document.createElement("textarea"):document.createElement("input");
- if(type!=="textarea")el.type=type;
+ wrap.className="field";
+ const lab=document.createElement("label");
+ lab.textContent=label;
+ wrap.appendChild(lab);
+ let el;
+ if(type==="textarea"){
+  el=document.createElement("textarea");
+  el.rows=3;
+ }else if(type==="select"){
+  el=document.createElement("select");
+  el.add(new Option("নির্বাচন করুন",""));
+  options.forEach(v=>el.add(new Option(v,v)));
+ }else{
+  el=document.createElement("input");
+  el.type=type;
+ }
  el.name=label;
+ el.required=false;
  wrap.appendChild(el);
  parent.appendChild(wrap);
+ return el;
 }
-function addSelect(parent,label,options,name){
- const wrap=document.createElement("div");
- wrap.innerHTML=`<label>${label}</label>`;
- const select=document.createElement("select");
- select.name=name;
- select.add(new Option("নির্বাচন করুন",""));
- options.forEach(v=>select.add(new Option(v,v)));
- wrap.appendChild(select);
- parent.appendChild(wrap);
+
+function addAddressFields(parent){
+ const heading=document.createElement("h3");
+ heading.className="full";
+ heading.textContent="ঠিকানার তথ্য";
+ parent.appendChild(heading);
+
+ const div=addField(parent,"বিভাগ","select");
+ div.id="divisionSelect";
+ const dist=addField(parent,"জেলা","select");
+ dist.id="districtSelect";
+ const up=addField(parent,"উপজেলা / থানা","select");
+ up.id="upazilaSelect";
+ const uni=addField(parent,"ইউনিয়ন / পৌরসভা / সিটি কর্পোরেশন","select");
+ uni.id="unionSelect";
+ addField(parent,"গ্রাম / মহল্লা");
+ addField(parent,"ডাকঘর");
+ addField(parent,"ওয়ার্ড নম্বর");
+ addField(parent,"বিস্তারিত ঠিকানা","textarea");
+
+ loadDivisions();
+ div.onchange=()=>loadDistricts(div.value);
+ dist.onchange=()=>loadUpazilas(dist.value);
+ up.onchange=()=>loadUnions(up.value);
 }
+
+const API="https://bdapis.pro.bd/geo/v2.0/";
+
+async function getList(url){
+ const res=await fetch(url);
+ if(!res.ok)throw new Error("তথ্য লোড হয়নি");
+ const json=await res.json();
+ return Array.isArray(json)?json:(json.data||json.results||[]);
+}
+function itemId(x){
+ return x.id??x.division_id??x.district_id??x.upazila_id??x.value??"";
+}
+function itemName(x){
+ if(typeof x==="string")return x;
+ return x.name?.bn||x.name?.local||x.name_bn||x.bn_name||x.name?.en||x.name||"";
+}
+function fillSelect(id,list,placeholder){
+ const el=$(id);
+ el.innerHTML="";
+ el.add(new Option(placeholder,""));
+ list.forEach(x=>el.add(new Option(itemName(x),itemId(x))));
+}
+async function loadDivisions(){
+ try{
+  const data=await getList(API+"divisions");
+  locationData.divisions=data;
+  fillSelect("divisionSelect",data,"বিভাগ নির্বাচন করুন");
+ }catch(e){
+  $("divisionSelect").innerHTML='<option value="">তালিকা লোড হয়নি - পরে চেষ্টা করুন</option>';
+ }
+}
+async function loadDistricts(id){
+ fillSelect("districtSelect",[],"লোড হচ্ছে...");
+ fillSelect("upazilaSelect",[],"আগে জেলা নির্বাচন করুন");
+ fillSelect("unionSelect",[],"আগে উপজেলা নির্বাচন করুন");
+ try{
+  const data=await getList(API+"districts/"+encodeURIComponent(id));
+  locationData.districts=data;
+  fillSelect("districtSelect",data,"জেলা নির্বাচন করুন");
+ }catch(e){fillSelect("districtSelect",[],"তথ্য পাওয়া যায়নি");}
+}
+async function loadUpazilas(id){
+ fillSelect("upazilaSelect",[],"লোড হচ্ছে...");
+ fillSelect("unionSelect",[],"আগে উপজেলা নির্বাচন করুন");
+ try{
+  const data=await getList(API+"upazilas/"+encodeURIComponent(id));
+  locationData.upazilas=data;
+  fillSelect("upazilaSelect",data,"উপজেলা নির্বাচন করুন");
+ }catch(e){fillSelect("upazilaSelect",[],"তথ্য পাওয়া যায়নি");}
+}
+async function loadUnions(id){
+ fillSelect("unionSelect",[],"লোড হচ্ছে...");
+ try{
+  const data=await getList(API+"unions/"+encodeURIComponent(id));
+  locationData.unions=data;
+  fillSelect("unionSelect",data,"ইউনিয়ন নির্বাচন করুন");
+ }catch(e){fillSelect("unionSelect",[],"তথ্য পাওয়া যায়নি");}
+}
+
+function openForm(name){
+ currentService=name;
+ currentRecordId="";
+ $("formArea").classList.remove("hidden");
+ $("formTitle").textContent=name+" — আবেদন প্রস্তুতি ফর্ম";
+ const fields=$("fields");
+ fields.innerHTML="";
+ addField(fields,"আবেদনকারীর পূর্ণ নাম");
+ addField(fields,"ইংরেজি নাম");
+ addField(fields,"পিতার নাম");
+ addField(fields,"মাতার নাম");
+ addField(fields,"মোবাইল নম্বর","tel");
+ addField(fields,"জন্ম তারিখ","date");
+
+ const h=document.createElement("h3");
+ h.className="full";
+ h.textContent="সেবার অতিরিক্ত তথ্য";
+ fields.appendChild(h);
+ (customFields[name]||[]).forEach(([label,type,opts])=>{
+  addField(fields,label,type,opts?opts.split(","):[]);
+ });
+
+ addAddressFields(fields);
+
+ const end=document.createElement("h3");
+ end.className="full";
+ end.textContent="অফিস ব্যবহারের জন্য";
+ fields.appendChild(end);
+ addField(fields,"আবেদনকারীর স্বাক্ষর");
+ addField(fields,"কর্তৃপক্ষের স্বাক্ষর (অফিসে পূরণ হবে)");
+ addField(fields,"অফিসের সিল (অফিসে প্রদান হবে)");
+ addField(fields,"তারিখ");
+
+ $("formArea").scrollIntoView({behavior:"smooth"});
+}
+
+function getFormData(){
+ const data={};
+ $("serviceForm").querySelectorAll("input,select,textarea").forEach(el=>{
+  data[el.name]=el.value;
+ });
+ return data;
+}
+
+function saveRecord(){
+ const data=getFormData();
+ const name=data["আবেদনকারীর পূর্ণ নাম"]||"নাম দেওয়া হয়নি";
+ const records=JSON.parse(localStorage.getItem("jisanRecords")||"[]");
+ const record={
+  id:currentRecordId||("JDS-"+Date.now()),
+  service:currentService,
+  name,
+  date:new Date().toLocaleString("bn-BD"),
+  data
+ };
+ const index=records.findIndex(r=>r.id===record.id);
+ if(index>=0)records[index]=record;
+ else records.unshift(record);
+ localStorage.setItem("jisanRecords",JSON.stringify(records));
+ currentRecordId=record.id;
+ alert("রেকর্ড সংরক্ষণ হয়েছে। নম্বর: "+record.id);
+ showRecords();
+}
+
+function showRecords(){
+ const q=($("recordSearch").value||"").toLowerCase();
+ const records=JSON.parse(localStorage.getItem("jisanRecords")||"[]");
+ $("records").innerHTML="";
+ records.filter(r=>(r.name+" "+r.id+" "+r.service).toLowerCase().includes(q))
+ .forEach(r=>{
+  const box=document.createElement("div");
+  box.className="record";
+  const title=document.createElement("b");
+  title.textContent=r.service+" — "+r.name;
+  const info=document.createElement("p");
+  info.textContent="রেকর্ড: "+r.id+" | "+r.date;
+  const open=document.createElement("button");
+  open.textContent="দেখুন / প্রিন্ট";
+  open.onclick=()=>printRecord(r);
+  const del=document.createElement("button");
+  del.textContent="মুছুন";
+  del.className="danger";
+  del.onclick=()=>deleteRecord(r.id);
+  box.append(title,info,open,del);
+  $("records").appendChild(box);
+ });
+ if(!records.length)$("records").textContent="এখনো কোনো রেকর্ড সংরক্ষণ করা হয়নি।";
+}
+
+function deleteRecord(id){
+ if(!confirm("এই রেকর্ড মুছে ফেলবেন?"))return;
+ const records=JSON.parse(localStorage.getItem("jisanRecords")||"[]").filter(r=>r.id!==id);
+ localStorage.setItem("jisanRecords",JSON.stringify(records));
+ showRecords();
+}
+
+function printForm(){
+ const data=getFormData();
+ const w=window.open("","_blank");
+ if(!w){alert("প্রিন্ট পেজ খুলতে ব্রাউজারে অনুমতি দিন।");return;}
+ let html=`<!DOCTYPE html><html lang="bn"><meta charset="UTF-8">
+ <title>${currentService}</title><style>
+ body{font-family:Arial,sans-serif;padding:25px;color:#111}
+ h2{text-align:center}table{width:100%;border-collapse:collapse}
+ td{border:1px solid #777;padding:8px}
+ .sign{display:flex;justify-content:space-between;margin-top:90px}
+ </style><h2>JISAN DIGITAL SEBA</h2>
+ <h3 style="text-align:center">${currentService} — আবেদন প্রস্তুতি ফর্ম</h3>
+ <p>রেকর্ড নম্বর: ${currentRecordId||"সংরক্ষণের পর পাওয়া যাবে"}</p><table>`;
+ Object.entries(data).forEach(([k,v])=>{
+  html+=`<tr><td>${escapeHtml(k)}</td><td>${escapeHtml(v)}</td></tr>`;
+ });
+ html+=`</table><div class="sign">
+ <div>আবেদনকারীর স্বাক্ষর<br><br>________________</div>
+ <div>অনুমোদিত কর্মকর্তার স্বাক্ষর ও সিল<br><br>________________</div>
+ </div><p style="margin-top:35px">দ্রষ্টব্য: এটি আবেদন প্রস্তুতির সহায়ক ফর্ম, সরকারি সনদ নয়। সংশ্লিষ্ট অফিসে যাচাই করুন।</p>
+ <script>window.onload=()=>window.print()<\/script></html>`;
+ w.document.write(html);
+ w.document.close();
+}
+
+function printRecord(r){
+ currentService=r.service;
+ currentRecordId=r.id;
+ const w=window.open("","_blank");
+ if(!w){alert("পপ-আপ অনুমতি দিন");return;}
+ let html=`<!DOCTYPE html><html lang="bn"><meta charset="UTF-8">
+ <title>রেকর্ড ${r.id}</title><style>
+ body{font-family:Arial;padding:25px}table{width:100%;border-collapse:collapse}
+ td{border:1px solid #777;padding:8px}.sign{display:flex;justify-content:space-between;margin-top:90px}
+ </style><h2 style="text-align:center">JISAN DIGITAL SEBA</h2>
+ <h3>${escapeHtml(r.service)}</h3><p>রেকর্ড নম্বর: ${r.id}</p><table>`;
+ Object.entries(r.data).forEach(([k,v])=>html+=`<tr><td>${escapeHtml(k)}</td><td>${escapeHtml(v)}</td></tr>`);
+ html+=`</table><div class="sign"><div>আবেদনকারীর স্বাক্ষর<br><br>___________</div>
+ <div>কর্তৃপক্ষের স্বাক্ষর ও সিল<br><br>___________</div></div>
+ <p>এটি আবেদন প্রস্তুতির সহায়ক ফর্ম, সরকারি সনদ নয়।</p>
+ <script>window.onload=()=>window.print()<\/script></html>`;
+ w.document.write(html);w.document.close();
+}
+function escapeHtml(s){
+ return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function closeForm(){$("formArea").classList.add("hidden");}
+renderServices();
+showRecords();
 </script>
 </body>
 </html>
