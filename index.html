@@ -1,1 +1,216 @@
 
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JISAN DIGITAL SEBA</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,"Noto Sans Bengali",sans-serif;background:#f3f7f4;color:#20352a;line-height:1.7}
+header{background:#087443;color:white;padding:25px 15px;text-align:center}
+header h1{margin:0;font-size:27px}
+header p{margin:5px 0}
+nav{background:#075b36;padding:12px;text-align:center;position:sticky;top:0;z-index:5}
+nav a{color:white;text-decoration:none;margin:0 10px;font-size:14px}
+.hero{padding:30px 15px;text-align:center;background:#e2f3e9}
+.hero h2{color:#087443}
+.container{max-width:1050px;margin:auto;padding:18px}
+.search{width:100%;padding:14px;border:1px solid #bbb;border-radius:8px;font-size:16px;margin:12px 0 20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px}
+.card{background:white;padding:17px;border-radius:12px;box-shadow:0 2px 9px #00000012;border:1px solid #e4eee7}
+.card h3{color:#087443;margin:0 0 8px}
+button,.btn{background:#087443;color:white;border:0;padding:10px 15px;border-radius:7px;cursor:pointer;text-decoration:none;display:inline-block;margin:5px 3px;font-size:14px}
+button:hover,.btn:hover{background:#075b36}
+.secondary{background:#64756b}
+section{margin:25px 0}
+.panel{background:white;padding:20px;border-radius:12px}
+label{display:block;margin-top:12px;font-weight:bold}
+input,textarea,select{width:100%;padding:12px;border:1px solid #bbb;border-radius:7px;font-size:15px}
+textarea{min-height:90px}
+.notice{background:#fff8dc;padding:14px;border-left:4px solid #d6a500;border-radius:5px}
+footer{background:#075b36;color:white;text-align:center;padding:22px;margin-top:35px}
+.small{font-size:13px;color:#637269}
+.hidden{display:none}
+@media(max-width:600px){header h1{font-size:23px}nav a{margin:0 5px;font-size:12px}}
+@media print{header,nav,footer,.no-print,.search{display:none!important}body{background:white}.panel{box-shadow:none}}
+</style>
+</head>
+<body>
+
+<header>
+<h1>🌿 JISAN DIGITAL SEBA</h1>
+<p>নাগরিক সেবা — এক জায়গায়, সহজ বাংলায়</p>
+<p class="small" style="color:white">সহজে জানুন, প্রস্তুতি নিন, সরকারি সেবায় এগিয়ে যান</p>
+</header>
+
+<nav>
+<a href="#home">হোম</a>
+<a href="#services">সেবাসমূহ</a>
+<a href="#prepare">ফর্ম প্রস্তুত</a>
+<a href="#about">আমাদের সম্পর্কে</a>
+</nav>
+
+<div class="hero" id="home">
+<h2>আপনার নাগরিক সেবা এখন আরও সহজ</h2>
+<p>প্রয়োজনীয় তথ্য, কাগজপত্রের তালিকা ও আবেদন প্রস্তুতির সহায়তা এক জায়গায়।</p>
+<a class="btn" href="#services">সেবাগুলো দেখুন</a>
+</div>
+
+<main class="container">
+
+<section id="services">
+<h2>📋 নাগরিক সেবাসমূহ (২১টি)</h2>
+<p>আপনার প্রয়োজনীয় সেবাটি খুঁজে নিন।</p>
+<input class="search" id="search" placeholder="🔍 সেবার নাম লিখে খুঁজুন..." oninput="filterServices()">
+<div class="grid" id="serviceList"></div>
+</section>
+
+<section id="prepare">
+<h2>📝 আবেদন প্রস্তুতির ফর্ম</h2>
+<div class="notice">
+এটি শুধু তথ্য ও আবেদন প্রস্তুতির সহায়ক ফর্ম। এখানে পূরণ করলেই সরকারি আবেদন জমা হবে না। প্রয়োজন অনুযায়ী সংশ্লিষ্ট সরকারি পোর্টাল বা অফিসে আবেদন করতে হবে।
+</div>
+<div class="panel">
+<form id="helperForm">
+<label>সেবার নাম</label>
+<select id="serviceName">
+<option>জন্ম নিবন্ধন</option>
+<option>জন্ম নিবন্ধন সংশোধন</option>
+<option>মৃত্যু নিবন্ধন</option>
+<option>জাতীয় পরিচয়পত্র</option>
+<option>পাসপোর্ট</option>
+<option>অন্যান্য সেবা</option>
+</select>
+
+<label>আবেদনকারীর নাম</label>
+<input id="applicant" placeholder="আপনার নাম লিখুন">
+
+<label>যোগাযোগ নম্বর (ঐচ্ছিক)</label>
+<input id="phone" type="tel" placeholder="মোবাইল নম্বর">
+
+<label>আবেদনের উদ্দেশ্য</label>
+<textarea id="purpose" placeholder="কী ধরনের সেবা প্রয়োজন লিখুন"></textarea>
+
+<label>প্রয়োজনীয় কাগজপত্র / অতিরিক্ত তথ্য</label>
+<textarea id="documents" placeholder="প্রয়োজনীয় কাগজপত্রের নাম লিখুন"></textarea>
+
+<button type="button" onclick="printForm()">🖨️ প্রিন্ট / PDF সংরক্ষণ</button>
+<button type="reset" class="secondary">মুছে ফেলুন</button>
+</form>
+<p class="small">সতর্কতা: এখানে NID নম্বর, পাসওয়ার্ড, OTP বা সংবেদনশীল নথি লিখবেন না। তথ্য এই ওয়েবসাইটে কোনো সার্ভারে জমা হয় না।</p>
+</div>
+</section>
+
+<section id="about">
+<h2>ℹ️ আমাদের সম্পর্কে</h2>
+<div class="panel">
+<p><b>JISAN DIGITAL SEBA</b> একটি স্বাধীন নাগরিক-সহায়তা ওয়েবসাইট। নাগরিকদের বিভিন্ন সরকারি সেবা সম্পর্কে সহজ ভাষায় তথ্য দেওয়া এবং আবেদন প্রস্তুতিতে সহায়তা করাই আমাদের উদ্দেশ্য।</p>
+<p>আমরা কোনো সরকারি প্রতিষ্ঠান নই এবং কোনো সরকারি আবেদন সরাসরি জমা দেওয়ার নিশ্চয়তা দিই না। সরকারি নিয়ম, ফি ও প্রয়োজনীয় কাগজপত্র সংশ্লিষ্ট অফিস বা সরকারি ওয়েবসাইট থেকে যাচাই করে নেবেন।</p>
+</div>
+</section>
+
+<section>
+<h2>🔗 গুরুত্বপূর্ণ সরকারি ওয়েবসাইট</h2>
+<div class="grid">
+<div class="card"><h3>জন্ম নিবন্ধন</h3><a class="btn" href="https://bdris.gov.bd" target="_blank">সরকারি ওয়েবসাইট</a></div>
+<div class="card"><h3>জাতীয় পরিচয়পত্র</h3><a class="btn" href="https://services.nidw.gov.bd" target="_blank">সরকারি ওয়েবসাইট</a></div>
+<div class="card"><h3>ই-পাসপোর্ট</h3><a class="btn" href="https://www.epassport.gov.bd" target="_blank">সরকারি ওয়েবসাইট</a></div>
+<div class="card"><h3>ভূমি সেবা</h3><a class="btn" href="https://land.gov.bd" target="_blank">সরকারি ওয়েবসাইট</a></div>
+<div class="card"><h3>মাইগভ</h3><a class="btn" href="https://www.mygov.bd" target="_blank">সরকারি ওয়েবসাইট</a></div>
+<div class="card"><h3>ই-টিন</h3><a class="btn" href="https://secure.incometax.gov.bd" target="_blank">সরকারি ওয়েবসাইট</a></div>
+</div>
+</section>
+
+</main>
+
+<footer>
+<h3>🌿 JISAN DIGITAL SEBA</h3>
+<p>নাগরিক সেবা — এক জায়গায়, সহজ বাংলায়</p>
+<p>© 2026 JISAN DIGITAL SEBA</p>
+<p class="small" style="color:white">এটি একটি স্বাধীন নাগরিক-সহায়তা প্ল্যাটফর্ম, সরকারি ওয়েবসাইট নয়।</p>
+</footer>
+
+<script>
+const services=[
+["জন্ম নিবন্ধন","জন্ম নিবন্ধনের আবেদন প্রক্রিয়া ও প্রয়োজনীয় কাগজপত্র জানুন।","https://bdris.gov.bd/br/application"],
+["জন্ম নিবন্ধন সংশোধন","জন্ম নিবন্ধনের তথ্য সংশোধনের নিয়ম জানুন।","https://bdris.gov.bd"],
+["জন্ম নিবন্ধন যাচাই","জন্ম নিবন্ধনের তথ্য যাচাইয়ের সরকারি ব্যবস্থা দেখুন।","https://bdris.gov.bd"],
+["মৃত্যু নিবন্ধন","মৃত্যু নিবন্ধনের আবেদন ও নিয়ম জানুন।","https://bdris.gov.bd"],
+["মৃত্যু নিবন্ধন যাচাই","মৃত্যু নিবন্ধন সংক্রান্ত তথ্য জানুন।","https://bdris.gov.bd"],
+["জাতীয় পরিচয়পত্র","NID সংক্রান্ত আবেদন ও প্রয়োজনীয় তথ্য জানুন।","https://services.nidw.gov.bd"],
+["NID সংশোধন","জাতীয় পরিচয়পত্রের তথ্য সংশোধনের নিয়ম জানুন।","https://services.nidw.gov.bd"],
+["NID ডাউনলোড","জাতীয় পরিচয়পত্রের অনলাইন সেবা দেখুন।","https://services.nidw.gov.bd"],
+["ই-পাসপোর্ট","ই-পাসপোর্ট আবেদন প্রক্রিয়া জানুন।","https://www.epassport.gov.bd"],
+["পাসপোর্ট তথ্য","পাসপোর্ট সংক্রান্ত নিয়ম ও তথ্য জানুন।","https://www.epassport.gov.bd"],
+["ই-টিন নিবন্ধন","ই-টিন সংক্রান্ত সরকারি সেবা দেখুন।","https://secure.incometax.gov.bd"],
+["আয়কর রিটার্ন","আয়কর রিটার্নের নিয়ম ও তথ্য জানুন।","https://etaxnbr.gov.bd"],
+["ভূমি উন্নয়ন কর","ভূমি উন্নয়ন কর সংক্রান্ত সেবা দেখুন।","https://land.gov.bd"],
+["নামজারি","জমির নামজারি আবেদন সংক্রান্ত তথ্য জানুন।","https://mutation.land.gov.bd"],
+["ভূমির খতিয়ান","খতিয়ান ও পর্চা সংক্রান্ত সেবা জানুন।","https://land.gov.bd"],
+["পুলিশ ক্লিয়ারেন্স","পুলিশ ক্লিয়ারেন্সের আবেদন প্রক্রিয়া জানুন।","https://pcc.police.gov.bd"],
+["ড্রাইভিং লাইসেন্স","ড্রাইভিং লাইসেন্স সংক্রান্ত তথ্য জানুন।","https://brta.gov.bd"],
+["গাড়ির তথ্য","মোটরযান সংক্রান্ত সরকারি সেবা জানুন।","https://brta.gov.bd"],
+["শিক্ষা সেবা","শিক্ষা সংক্রান্ত সরকারি তথ্য ও সেবা জানুন।","https://www.mygov.bd"],
+["সরকারি চাকরি","সরকারি চাকরির বিজ্ঞপ্তি ও আবেদন তথ্য জানুন।","https://alljobs.teletalk.com.bd"],
+["অন্যান্য নাগরিক সেবা","অন্যান্য সরকারি সেবার তথ্য খুঁজুন।","https://www.mygov.bd"]
+];
+
+function showServices(items){
+const list=document.getElementById("serviceList");
+list.innerHTML="";
+items.forEach((s,i)=>{
+const card=document.createElement("div");
+card.className="card";
+const title=document.createElement("h3");
+title.textContent=(services.indexOf(s)+1)+". "+s[0];
+const desc=document.createElement("p");
+desc.textContent=s[1];
+const link=document.createElement("a");
+link.className="btn";
+link.href=s[2];
+link.target="_blank";
+link.rel="noopener";
+link.textContent="সরকারি তথ্য / পোর্টাল";
+const formBtn=document.createElement("button");
+formBtn.textContent="ফর্ম প্রস্তুত করুন";
+formBtn.onclick=()=>{
+document.getElementById("serviceName").value=s[0];
+document.getElementById("prepare").scrollIntoView({behavior:"smooth"});
+};
+card.append(title,desc,link,formBtn);
+list.appendChild(card);
+});
+}
+function filterServices(){
+const q=document.getElementById("search").value.trim().toLowerCase();
+showServices(services.filter(s=>s.join(" ").toLowerCase().includes(q)));
+}
+function printForm(){
+const applicant=document.getElementById("applicant").value;
+const purpose=document.getElementById("purpose").value;
+if(!applicant||!purpose){alert("নাম ও আবেদনের উদ্দেশ্য লিখুন।");return;}
+const w=window.open("","_blank");
+if(!w){alert("প্রিন্ট পেজ খুলতে ব্রাউজারে অনুমতি দিন।");return;}
+const values=[
+["সেবার নাম",document.getElementById("serviceName").value],
+["আবেদনকারীর নাম",applicant],
+["যোগাযোগ নম্বর",document.getElementById("phone").value],
+["আবেদনের উদ্দেশ্য",purpose],
+["প্রয়োজনীয় কাগজপত্র / অতিরিক্ত তথ্য",document.getElementById("documents").value]
+];
+w.document.write("<html lang='bn'><meta charset='UTF-8'><title>আবেদন প্রস্তুতি</title><body style='font-family:Arial,sans-serif;padding:25px;line-height:2'><h2>JISAN DIGITAL SEBA</h2><h3>আবেদন প্রস্তুতির কপি</h3>");
+values.forEach(v=>{
+w.document.write("<p><b>"+v[0]+":</b> "+escapeHTML(v[1])+"</p>");
+});
+w.document.write("<hr><p>এটি একটি প্রস্তুতিমূলক কপি, সরকারি আবেদন বা সনদ নয়।</p><button onclick='window.print()'>প্রিন্ট / PDF সংরক্ষণ</button></body></html>");
+w.document.close();
+}
+function escapeHTML(value){
+return String(value).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+showServices(services);
+</script>
+</body>
+</html>
+
